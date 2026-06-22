@@ -1,205 +1,200 @@
-# Active Directory Home Lab
+# Active Directory Security Home Lab
 
-## Project Overview
+## Overview
 
-This project demonstrates the deployment and administration of a Windows Server 2022 Active Directory environment in a virtualized lab environment.
+This project demonstrates the deployment, administration, and security analysis of a Windows Server 2022 Active Directory environment in a virtualized lab.
 
-The objective of this lab is to gain hands-on experience with Active Directory administration, user and group management, DNS configuration, domain joining, network enumeration, and Active Directory security analysis using BloodHound.
+The lab was built to gain practical experience with:
+
+* Active Directory Administration
+* Domain Controller Deployment
+* DNS Configuration
+* User & Group Management
+* Organizational Units (OUs)
+* Domain Joining
+* LDAP Enumeration
+* SMB Enumeration
+* Network Enumeration
+* BloodHound Analysis
+* Active Directory Security Fundamentals
 
 ---
 
-## Lab Architecture
-
-### Network Diagram
+# Lab Architecture
 
 ```text
-                +----------------+
-                |  Kali Linux    |
-                | 192.168.100.X  |
-                +--------+-------+
-                         |
-                         |
-        -----------------------------------
-                         |
-                         |
-                +--------+-------+
-                |     DC01       |
-                | Windows Server |
-                | 192.168.100.10 |
-                | corp.local     |
-                +--------+-------+
-                         |
-                         |
-                +--------+-------+
-                |   WIN11-01     |
-                | Windows 11     |
-                | 192.168.100.20 |
-                +----------------+
+                    +---------------------+
+                    |     Kali Linux      |
+                    |  Attacker Machine   |
+                    +----------+----------+
+                               |
+                               |
+---------------------------------------------------------
+                               |
+                               |
+                    +----------+----------+
+                    |        DC01         |
+                    | Windows Server 2022 |
+                    | Domain Controller   |
+                    |     corp.local      |
+                    +----------+----------+
+                               |
+                               |
+                    +----------+----------+
+                    |      WIN11-01       |
+                    | Windows 11 Client   |
+                    | Domain Joined Host  |
+                    +---------------------+
 ```
 
 ---
 
-## Lab Environment
+# Lab Environment
 
-### Domain Information
-
-| Component | Value |
-|------------|---------|
-| Domain Name | corp.local |
-| Domain Controller | DC01 |
-| DNS Server | DC01 |
-| Client Machine | WIN11-01 |
-| Attacker Machine | Kali Linux |
-
----
-
-## Virtual Machines
-
-### DC01
-
-- Windows Server 2022
-- Active Directory Domain Services (AD DS)
-- DNS Server
-- Domain Controller
-
-### WIN11-01
-
-- Windows 11
-- Domain Joined Workstation
-
-### Kali Linux
-
-- BloodHound
-- Neo4j
-- Nmap
-- Enum4Linux
-- SMB Enumeration Tools
-- LDAP Enumeration Tools
+| Component         | Description       |
+| ----------------- | ----------------- |
+| Hypervisor        | Oracle VirtualBox |
+| Domain Name       | corp.local        |
+| Domain Controller | DC01              |
+| DNS Server        | DC01              |
+| Client Machine    | WIN11-01          |
+| Attacker Machine  | Kali Linux        |
 
 ---
 
-## Active Directory Structure
+# Virtual Machines
 
-### Organizational Units (OUs)
+## DC01
 
-- HR
-- Finance
-- IT
-- Sales
-- Marketing
-- Service Accounts
-- Admins
-- Groups
-- Servers
-- Workstations
+* Windows Server 2022
+* Active Directory Domain Services (AD DS)
+* DNS Server
+* Domain Controller
 
-### Security Groups
+## WIN11-01
 
-- HR_Users
-- Finance_Users
-- IT_Users
-- Sales_Users
-- Marketing_Users
-- Workstation Admins
-- Server Admins
+* Windows 11
+* Domain Joined Workstation
 
-### User Accounts
+## Kali Linux
 
-Examples:
+Installed Tools:
 
-- sarah.hr
-- ali.finance
-- ahmed.it
-- hamza.sales
-- zara.marketing
-
-### Service Accounts
-
-- svc_sql
-- svc_backup
-- svc_monitor
+* BloodHound CE
+* BloodHound Python
+* Neo4j
+* Nmap
+* Enum4Linux
+* SMBClient
+* LDAP Enumeration Tools
 
 ---
 
-## Technologies Used
+# Active Directory Structure
 
-### Infrastructure
+## Organizational Units (OUs)
 
-- Oracle VirtualBox
-- Windows Server 2022
-- Windows 11
-- Kali Linux
-
-### Active Directory
-
-- Active Directory Domain Services
-- DNS
-- LDAP
-- Kerberos
-- SMB
-
-### Security Tools
-
-- BloodHound
-- BloodHound CE Python
-- Neo4j
-- Nmap
-- Enum4Linux
-- SMBClient
+* HR
+* Finance
+* IT
+* Sales
+* Marketing
+* Service Accounts
+* Groups
+* Servers
+* Workstations
 
 ---
 
-## Active Directory Deployment
+## Security Groups
 
-### Domain Controller Installation
-
-- Installed Windows Server 2022
-- Configured static IP address
-- Installed AD DS role
-- Promoted server to Domain Controller
-- Created corp.local domain
-
-### DNS Configuration
-
-- Configured Forward Lookup Zone
-- Verified DNS resolution
-- Verified LDAP service records
-
-### Client Deployment
-
-- Installed Windows 11
-- Joined workstation to corp.local
-- Logged in using domain users
+* HR_Users
+* Finance_Users
+* IT_Users
+* Sales_Users
+* Marketing_Users
+* Workstation Admins
+* Server Admins
 
 ---
 
-## Enumeration Activities
+## Example Users
 
-### DNS Enumeration
+* sarah.hr
+* ali.finance
+* ahmed.it
+* hamza.sales
+* zara.marketing
+
+---
+
+## Service Accounts
+
+* svc_sql
+* svc_backup
+* svc_monitor
+
+---
+
+# Active Directory Deployment
+
+## Domain Controller Setup
+
+Completed:
+
+* Installed Windows Server 2022
+* Configured Static IP Address
+* Installed AD DS Role
+* Promoted Server to Domain Controller
+* Created corp.local Domain
+
+---
+
+## DNS Configuration
+
+Configured:
+
+* Forward Lookup Zone
+* DNS Name Resolution
+* LDAP Service Records
+
+---
+
+## Client Deployment
+
+* Installed Windows 11
+* Joined workstation to corp.local
+* Verified domain authentication
+
+---
+
+# Enumeration Activities
+
+## DNS Enumeration
 
 ```bash
 nslookup corp.local 192.168.100.10
 ```
 
-### LDAP Service Discovery
+## LDAP Enumeration
 
 ```bash
 nslookup -type=SRV _ldap._tcp.dc._msdcs.corp.local 192.168.100.10
 ```
 
-### Network Scanning
+## Network Scanning
 
 ```bash
 nmap -sV -p 53,88,135,139,389,445,464,636,3268,3269 192.168.100.10
 ```
 
-### SMB Enumeration
+## SMB Enumeration
 
 ```bash
 smbclient -L //192.168.100.10 -N
 ```
 
-### Domain Enumeration
+## Domain Enumeration
 
 ```bash
 enum4linux 192.168.100.10
@@ -207,11 +202,11 @@ enum4linux 192.168.100.10
 
 ---
 
-## BloodHound Analysis
+# BloodHound Analysis
 
 BloodHound was used to collect and analyze Active Directory relationships.
 
-### Data Collection
+## Data Collection
 
 ```bash
 bloodhound-python \
@@ -222,28 +217,35 @@ bloodhound-python \
 -c All
 ```
 
-### Analysis Goals
+## Analysis Objectives
 
-- User Enumeration
-- Group Enumeration
-- Computer Enumeration
-- Privilege Analysis
-- Attack Path Discovery
-- Domain Administration Mapping
+* User Enumeration
+* Group Enumeration
+* Computer Enumeration
+* Domain Mapping
+* Privilege Analysis
+* Attack Path Discovery
+* Administrative Relationship Analysis
 
 ---
 
-## Screenshots
+# Screenshots
 
-### VirtualBox Environment
+## Infrastructure
 
-![VirtualBox](images/virtualbox-lab.png)
+### VirtualBox Lab Environment
+
+![VirtualBox Lab](images/Virtualbox-lab.png)
 
 ### Active Directory Overview
 
 ![AD Overview](images/ad-overview.png)
 
-### Organizational Units
+---
+
+## Active Directory Administration
+
+### Organizational Units Structure
 
 ![OUs](images/ous-structure.png)
 
@@ -253,7 +255,7 @@ bloodhound-python \
 
 ### Groups
 
-![Groups](images/groups.png)
+![Groups](images/Groups.png)
 
 ### DNS Configuration
 
@@ -263,78 +265,112 @@ bloodhound-python \
 
 ![Domain Join](images/domain-join.png)
 
+---
+
+## Enumeration
+
+### Nmap Scan
+
+![Nmap](images/nmap.png)
+
+### DNS Enumeration
+
+![DNS Enumeration](images/dns-enumeration.png)
+
+### LDAP Enumeration
+
+![LDAP Enumeration](images/LDAP enumeration.png)
+
+### Additional LDAP Enumeration
+
+![LDAP Enumeration 2](images/LDAP enumeration2.png)
+
+### SMB Enumeration
+
+![SMB Enumeration](images/Smb Enumeration.png)
+
+### User and Group Enumeration
+
+![Users and Groups](images/groups and user Enumeration.png)
+
+---
+
+## BloodHound Analysis
+
 ### BloodHound Dashboard
 
 ![BloodHound Dashboard](images/bloodhound-dashboard.png)
 
-### BloodHound Analysis
+### BloodHound Graph
 
 ![BloodHound Graph](images/bloodhound-graph.png)
 
-### Nmap Scan
+---
 
-![Nmap](images/nmap-scan.png)
+# Skills Demonstrated
+
+## Active Directory
+
+* Active Directory Administration
+* User Management
+* Group Management
+* Organizational Unit Administration
+* DNS Administration
+* Domain Management
+
+## Security
+
+* LDAP Enumeration
+* SMB Enumeration
+* DNS Enumeration
+* Network Enumeration
+* BloodHound Analysis
+* Attack Surface Mapping
+
+## Windows Administration
+
+* Windows Server Deployment
+* Domain Controller Configuration
+* Domain Joining
+* Account Management
 
 ---
 
-## Skills Demonstrated
-
-### Active Directory
-
-- Active Directory Administration
-- Organizational Unit Management
-- User and Group Administration
-- Domain Management
-- DNS Administration
-
-### Security Operations
-
-- Network Enumeration
-- SMB Enumeration
-- LDAP Enumeration
-- Attack Surface Mapping
-- BloodHound Analysis
-
-### Windows Administration
-
-- Windows Server Deployment
-- Domain Controller Configuration
-- Domain Joining
-- Account Management
-
----
-
-## Learning Outcomes
+# Learning Outcomes
 
 Through this project I gained practical experience in:
 
-- Building an Active Directory environment from scratch
-- Configuring Domain Controllers
-- Managing users, groups, and permissions
-- Performing Active Directory enumeration
-- Understanding Kerberos and LDAP services
-- Visualizing AD relationships using BloodHound
-- Analyzing potential privilege escalation paths
+* Building an Active Directory environment from scratch
+* Configuring Domain Controllers
+* Managing users, groups, and permissions
+* Performing Active Directory enumeration
+* Understanding Kerberos, LDAP, SMB, and DNS
+* Using BloodHound to visualize AD relationships
+* Identifying potential privilege escalation paths
 
 ---
 
-## Future Improvements
+# Future Enhancements
 
-Planned enhancements include:
+Planned additions include:
 
-- Additional Domain Controllers
-- Group Policy Objects (GPOs)
-- File Server Deployment
-- Service Account Hardening
-- Kerberoasting Lab
-- AS-REP Roasting Lab
-- Privilege Escalation Scenarios
-- Full Red Team Simulation
+* Group Policy Objects (GPOs)
+* Additional Domain Controllers
+* File Server Deployment
+* Kerberoasting Lab
+* AS-REP Roasting Lab
+* Password Spraying Lab
+* Privilege Escalation Scenarios
+* Full Active Directory Red Team Lab
 
 ---
 
-## Author
+# Author
 
-Umar Farooq
+**Umar Farooq**
 
-Cybersecurity Student | Active Directory Security | Penetration Testing | Blue Team & Red Team Learning
+Cybersecurity Student | Active Directory Security | SOC Analyst | Red Teaming
+
+GitHub: https://github.com/Umar-FarooQ1427
+
+TryHackMe: https://tryhackme.com/p/umarfarooq1427
